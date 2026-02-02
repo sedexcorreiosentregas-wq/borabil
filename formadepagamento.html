@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pagamento — Escolha o método</title>
+    <style>
+      /* RESET / BASE */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #222;
+        padding-top: 110px;
+      }
+
+      /* ========== HEADER AMARELO ========== */
+      .header-yellow {
+        background: #fff16f;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+      .container-header {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+      }
+      .logo img {
+        height: 36px;
+        display: block;
+      }
+
+      /* ========== SUB-HEADER COM ENDEREÇO ========== */
+      .sub-header {
+        background: #fff16e;
+        padding: 6px 0;
+        position: fixed;
+        top: 48px;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .address-display {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        font-size: 13px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ========== CONTAINER PRINCIPAL ========== */
+      .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0 15px;
+      }
+
+      .payment-wrap {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      }
+
+      h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: #111;
+      }
+
+      /* OPÇÕES DE PAGAMENTO */
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* Estilo do Link do PIX para parecer um botão */
+      .pix-link {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .payment-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 15px;
+        background: #fff;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .payment-option:hover {
+        border-color: #3483fa;
+        background: #f9f9f9;
+      }
+      .payment-option.selected {
+        border-color: #3483fa;
+        background: #f0f6ff;
+      }
+
+      .payment-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .payment-title {
+        font-weight: 700;
+        color: #111;
+        font-size: 16px;
+      }
+      .payment-sub {
+        font-size: 13px;
+        color: #00a650;
+        font-weight: bold;
+      }
+
+      /* FORMULÁRIO CARTÃO */
+      .pay-area {
+        margin-top: 20px;
+        display: none;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+      }
+      .pay-area.active {
+        display: block;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .field span {
+        font-size: 14px;
+        color: #666;
+      }
+      .field input {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+        outline: none;
+      }
+      .field input:focus {
+        border-color: #3483fa;
+      }
+
+      .row {
+        display: flex;
+        gap: 12px;
+      }
+
+      /* RESUMO */
+      .summary {
+        background: #fff;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+      }
+      .order-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .total {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111;
+      }
+
+      .btn-continue {
+        background: #3483fa;
+        color: #fff;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 16px;
+      }
+      .btn-continue:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 900px) {
+        .payment-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header-yellow">
+      <div class="container-header">
+        <a href="index.html"><img src="css/imagens/logo.png" alt="Logo" /></a>
+      </div>
+    </header>
+
+    <!-- SUB-HEADER -->
+    <div class="sub-header">
+      <div class="address-display">
+        📍 Enviar para: <b id="display-endereco">Carregando endereço...</b>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="payment-wrap">
+        <div class="card">
+          <h2>Como você prefere pagar?</h2>
+
+          <div class="options">
+            <!-- OPÇÃO PIX (LINK DIRETO) -->
+            <a href="pg4.html" class="pix-link">
+              <div class="payment-option">
+                <div class="payment-info">
+                  <div class="payment-title">Pix</div>
+                  <div class="payment-sub">Aprovação imediata</div>
+                </div>
+                <div style="font-size: 20px">⚡</div>
+              </div>
+            </a>
+
+            <!-- OPÇÃO CARTÃO (ABRE FORMULÁRIO) -->
+            <div class="payment-option" id="opt-card" onclick="toggleCard()">
+              <div class="payment-info">
+                <div class="payment-title">Cartão de crédito</div>
+                <div class="payment-sub">Até 12x sem juros</div>
+              </div>
+              <div style="font-size: 20px">💳</div>
+            </div>
+          </div>
+
+          <!-- FORMULÁRIO DO CARTÃO -->
+          <div id="card-area" class="pay-area">
+            <h3>Dados do Cartão</h3>
+            <br />
+            <div class="field">
+              <span>Nome impresso no cartão</span>
+              <input
+                type="text"
+                id="card-name"
+                placeholder="Ex: JOÃO A SILVA"
+              />
+            </div>
+            <div class="field">
+              <span>Número do cartão</span>
+              <input
+                type="text"
+                id="card-number"
+                placeholder="0000 0000 0000 0000"
+                maxlength="19"
+              />
+            </div>
+            <div class="row">
+              <div class="field" style="flex: 1">
+                <span>Validade</span>
+                <input
+                  type="text"
+                  id="card-exp"
+                  placeholder="MM/AA"
+                  maxlength="5"
+                />
+              </div>
+              <div class="field" style="flex: 1">
+                <span>CVV</span>
+                <input
+                  type="text"
+                  id="card-cvv"
+                  placeholder="123"
+                  maxlength="4"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESUMO -->
+        <aside class="summary">
+          <h3 style="margin-bottom: 15px">Resumo da compra</h3>
+          <div class="order-line">
+            <span>Produto</span><span>R$ 1.349,00</span>
+          </div>
+          <div class="order-line">
+            <span>Frete</span><span style="color: #00a650">Grátis</span>
+          </div>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0" />
+          <div class="order-line total">
+            <span>Total</span><span>R$ 1.349,00</span>
+          </div>
+
+          <button
+            id="finalize-btn"
+            class="btn-continue"
+            disabled
+            onclick="finalizarCartao()"
+          >
+            Finalizar compra
+          </button>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      // PEGAR ENDEREÇO
+      function carregarEndereco() {
+        const params = new URLSearchParams(window.location.search);
+        const rua = params.get("endereco_rua") || "São Paulo";
+        const num = params.get("endereco_numero") || "";
+        document.getElementById("display-endereco").innerText =
+          rua + (num ? ", " + num : "");
+      }
+
+      // MOSTRAR/ESCONDER CARTÃO
+      function toggleCard() {
+        const area = document.getElementById("card-area");
+        const btn = document.getElementById("finalize-btn");
+        const opt = document.getElementById("opt-card");
+
+        area.classList.add("active");
+        opt.classList.add("selected");
+        btn.disabled = false;
+      }
+
+      // FINALIZAR CARTÃO
+      function finalizarCartao() {
+        const nome = document.getElementById("card-name").value;
+        const num = document.getElementById("card-number").value;
+        if (!nome || num.length < 15) {
+          alert("Por favor, preencha os dados do cartão corretamente.");
+          return;
+        }
+        alert("Processando pagamento...");
+        window.location.href = "confirmacao.html"; // Mude para sua página de sucesso
+      }
+
+      // MÁSCARAS
+      document.getElementById("card-number").addEventListener("input", (e) => {
+        let v = e.target.value.replace(/\D/g, "").match(/.{1,4}/g);
+        e.target.value = v ? v.join(" ") : "";
+      });
+      document.getElementById("card-exp").addEventListener("input", (e) => {
+        let v = e.target.value.replace(/\D/g, "");
+        if (v.length > 2) v = v.splice(2, 0, "/") && v; // simplificado
+        e.target.value =
+          v.length > 2 ? v.substring(0, 2) + "/" + v.substring(2, 4) : v;
+      });
+
+      window.onload = carregarEndereco;
+    </script>
+  </body>
+</html>

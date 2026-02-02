@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pagamento via PIX</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #111;
+        color: #fff;
+        line-height: 1.4;
+      }
+      .wrap {
+        max-width: 520px;
+        margin: 24px auto;
+        padding: 20px;
+      }
+      .card {
+        background: #0f1720;
+        padding: 18px;
+        border-radius: 10px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      }
+      .header {
+        background: #0fa84b;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .header h1 {
+        font-size: 16px;
+        color: #fff;
+      }
+      .notice {
+        background: #12221a;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 14px;
+        color: #dff7e6;
+      }
+      .value-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .value-row .label {
+        color: #bcd9c0;
+      }
+      .value-row .value {
+        font-weight: 800;
+        font-size: 18px;
+      }
+      .timer {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #88ff9d;
+      }
+      .code-box {
+        background: #0b0f12;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .pix-code {
+        font-family: monospace;
+        background: #071018;
+        padding: 10px;
+        border-radius: 6px;
+        color: #aef2b8;
+        word-break: break-all;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 16px;
+        border-radius: 8px;
+        background: #0fa84b;
+        color: #06210e;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        margin-top: 12px;
+      }
+      .btn.secondary {
+        background: #263238;
+        color: #fff;
+      }
+      .upload-row {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .file-input {
+        color: #fff;
+      }
+      .qr-placeholder {
+        width: 200px;
+        height: 200px;
+        background: #fff;
+        border-radius: 8px;
+        margin: 16px auto 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #111;
+        font-weight: 700;
+      }
+      .instructions {
+        font-size: 13px;
+        color: #9fbfaa;
+        margin-top: 12px;
+      }
+      .small {
+        font-size: 13px;
+        color: #9fbfaa;
+        margin-top: 8px;
+      }
+      /* responsivo */
+      @media (max-width: 560px) {
+        .wrap {
+          padding: 12px;
+          margin: 10px;
+        }
+        .qr-placeholder {
+          width: 160px;
+          height: 160px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="header">
+          <img src="css/imagens/logo.png" alt="logo" style="height: 36px" />
+          <h1>Pagamento via Pix</h1>
+        </div>
+
+        <div class="notice">
+          <div class="value-row">
+            <div class="label">Valor total:</div>
+            <div class="value" id="total-display">R$ 0,00</div>
+          </div>
+
+          <div
+            style="
+              margin-top: 6px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <div class="small">Esse código tem validade de</div>
+            <div class="timer" id="timer">10:00</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight: 700; color: #dff7e6; margin-bottom: 8px">
+            Código Pix
+          </div>
+          <div class="code-box">
+            <div class="pix-code" id="pix-code">Gerando código...</div>
+          </div>
+
+          <div
+            style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap"
+          >
+            <button class="btn" id="copyCodeBtn">Copiar código</button>
+            <button class="btn secondary" id="copyQrBtn">
+              Copiar QR (simulado)
+            </button>
+          </div>
+
+          <div class="upload-row">
+            <label style="color: #9fbfaa">Enviar comprovante:</label>
+            <input
+              type="file"
+              id="fileProof"
+              class="file-input"
+              accept="image/*,.pdf"
+            />
+          </div>
+
+          <button
+            class="btn"
+            id="sendProofBtn"
+            style="background: #1a73e8; margin-top: 14px"
+          >
+            Enviar comprovante
+          </button>
+
+          <div class="qr-placeholder" id="qr-box">QR CODE (SIMULADO)</div>
+
+          <div class="instructions">
+            <ol style="padding-left: 18px">
+              <li>Acesse seu Internet Banking ou app de pagamentos.</li>
+              <li>Escolha pagar via Pix.</li>
+              <li>Cole o código Pix acima ou escaneie o QR code.</li>
+            </ol>
+          </div>
+
+          <div class="small">
+            Depois de enviar o comprovante, a confirmação pode levar alguns
+            minutos (simulação).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Lê params (endereço, total, etc.) passados pela query string
+      function lerParams() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+          rua: p.get("endereco_rua") || "",
+          numero: p.get("endereco_numero") || "",
+          cep: p.get("endereco_cep") || "",
+          frete: parseFloat(p.get("frete") || "0") || 0,
+          total: parseFloat(p.get("total") || "0") || 0,
+        };
+      }
+
+      // Gera um PIX code simulado (dummy) — apenas para exibição
+      function gerarPixCode(total) {
+        // gera string única básica (não é um PIX real)
+        const t = Date.now().toString().slice(-6);
+        const cents = Math.round(total * 100)
+          .toString()
+          .padStart(3, "0");
+        return `00020101021226BR.GOV.BCB.PIX0136+55XXXXXXXXXXXX0208PAYLOAD${t}520400005303986540${cents}5802BR5910EXEMPLO LOJA6009SAO PAULO62290525${t}6304${(Math.random() * 9000) | 0}`;
+      }
+
+      // Formata valor para R$
+      function formatReal(v) {
+        return "R$ " + v.toFixed(2).replace(".", ",");
+      }
+
+      // Contador regressivo em segundos
+      function startTimer(seconds, el) {
+        let remaining = seconds;
+        function tick() {
+          const mm = String(Math.floor(remaining / 60)).padStart(2, "0");
+          const ss = String(remaining % 60).padStart(2, "0");
+          el.innerText = mm + ":" + ss;
+          if (remaining <= 0) {
+            clearInterval(timerId);
+            el.innerText = "Expirado";
+            // opcional: desabilitar botões
+            document.getElementById("copyCodeBtn").disabled = true;
+            document.getElementById("sendProofBtn").disabled = true;
+          }
+          remaining--;
+        }
+        tick();
+        const timerId = setInterval(tick, 1000);
+        return timerId;
+      }
+
+      (function init() {
+        const data = lerParams();
+        const totalDisplay = document.getElementById("total-display");
+        const pixCodeEl = document.getElementById("pix-code");
+
+        // se total não foi passado, calcular fallback (exemplo)
+        const total = data.total || 1349.0 + (data.frete || 0);
+        totalDisplay.innerText = formatReal(total);
+
+        // gerar código Pix simulado e mostrar
+        const pixCode = gerarPixCode(total);
+        pixCodeEl.innerText = pixCode;
+
+        // iniciar contador 10 minutos (600s)
+        startTimer(600, document.getElementById("timer"));
+
+        // copiar código
+        document.getElementById("copyCodeBtn").addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(pixCode)
+            .then(() => {
+              alert("Código Pix copiado para a área de transferência.");
+            })
+            .catch(() => {
+              alert(
+                "Impossível copiar automaticamente. Selecione e copie manualmente.",
+              );
+            });
+        });
+
+        // copiar QR (simulado) - copia o mesmo pixCode para facilitar
+        document.getElementById("copyQrBtn").addEventListener("click", () => {
+          navigator.clipboard
+            .writeText("[QR_SIMULADO] " + pixCode)
+            .then(() => {
+              alert("Conteúdo do QR (simulado) copiado.");
+            })
+            .catch(() => {
+              alert("Erro ao copiar o QR (simulado).");
+            });
+        });
+
+        // enviar comprovante (simulação)
+        document
+          .getElementById("sendProofBtn")
+          .addEventListener("click", () => {
+            const file = document.getElementById("fileProof").files[0];
+            if (!file) {
+              alert(
+                "Escolha um arquivo de imagem ou PDF para enviar como comprovante.",
+              );
+              return;
+            }
+            // simula upload
+            document.getElementById("sendProofBtn").innerText = "Enviando...";
+            document.getElementById("sendProofBtn").disabled = true;
+            setTimeout(() => {
+              alert(
+                "Comprovante enviado (simulação). A compra será atualizada após confirmação.",
+              );
+              document.getElementById("sendProofBtn").innerText =
+                "Enviar comprovante";
+              document.getElementById("sendProofBtn").disabled = false;
+            }, 1400);
+          });
+
+        // opcional: preencher box de QR com informação (simulada)
+        const qrBox = document.getElementById("qr-box");
+        qrBox.innerText =
+          "QR CODE (SIMULADO)\n\n" + pixCode.slice(0, 24) + "...";
+      })();
+    </script>
+  </body>
+</html>

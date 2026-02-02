@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Faixas Amarelas - Exemplo</title>
+    <style>
+      /* RESET BÁSICO */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #111;
+      }
+
+      /* HEADER AMARELO PRINCIPAL */
+      .header-yellow {
+        background: #fff16f;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .container-header {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        gap: 10px;
+      }
+      .left-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+      .logo img {
+        height: 36px;
+        display: block;
+        flex: 0 0 auto;
+      }
+      .search-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+      }
+      .search-input {
+        width: 100%;
+        max-width: 520px;
+        height: 36px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 0 10px;
+        outline: none;
+      }
+      .right-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+      }
+      .btn-hamburger {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 5px;
+      }
+      .btn-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #333;
+      }
+      .btn-cart {
+        text-decoration: none;
+        font-size: 20px;
+        position: relative;
+        display: inline-block;
+        padding: 6px;
+        border-radius: 8px;
+      }
+      .cart-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ff4d4f;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 12px;
+      }
+
+      /* FAIXINHA DE ENVIO (SUB-HEADER) */
+      .sub-header {
+        background: #fff16e;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 48px; /* altura do header amarelo para ficar logo abaixo */
+        z-index: 99;
+      }
+      .delivery-link {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        text-decoration: none;
+        color: #333;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER AMARELO PRINCIPAL -->
+    <header class="header-yellow">
+      <div class="container-header">
+        <div class="left-group">
+          <div class="logo">
+            <a href="index.html"
+              ><img src="css/imagens/logo.png" alt="Logo"
+            /></a>
+          </div>
+          <div class="search-box">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Buscar produtos, marcas e muito mais..."
+            />
+          </div>
+        </div>
+        <div class="right-controls">
+          <a href="teste.html" class="btn-cart" aria-label="Carrinho">
+            🛒 <span class="cart-badge">1</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- FAIXINHA DE ENVIO (SUB-HEADER) -->
+    <div class="sub-header"></div>
+  </body>
+</html>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Endereço — Projeto</title>
+    <style>
+      /* ========= RESET / BASE ========= */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #111;
+        /* Espaço superior para não ficar escondido pelo header sticky */
+        padding-top: 110px; /* ajuste se mudar altura do header/sub-header */
+      }
+
+      /* ========= HEADER (mesmo padrão) ========= */
+      .header-yellow {
+        background: #fff16f;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+      .container-header {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        gap: 10px;
+      }
+      .left-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+      .logo img {
+        height: 36px;
+        display: block;
+      }
+      .search-box {
+        flex: 1;
+        min-width: 0;
+      }
+      .search-input {
+        width: 100%;
+        max-width: 520px;
+        height: 36px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 0 10px;
+      }
+      .right-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+      }
+      .btn-hamburger {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 5px;
+      }
+      .btn-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #333;
+      }
+      .btn-cart {
+        text-decoration: none;
+        font-size: 20px;
+        position: relative;
+        padding: 6px;
+        border-radius: 8px;
+      }
+      .cart-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ff4d4f;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 12px;
+      }
+
+      /* ========= SUB-HEADER (faixinha envio) ========= */
+      .sub-header {
+        background: #fff16e;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        position: fixed;
+        top: 48px; /* posiciona logo abaixo do header amarelo (ajuste se mudar header) */
+        left: 0;
+        right: 0;
+        z-index: 99;
+      }
+      .delivery-link {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        text-decoration: none;
+        color: #333;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ========= CONTAINER CENTRAL (mesmo padrão do layout) ========= */
+      .container-central {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 18px 15px;
+        box-sizing: border-box;
+      }
+
+      /* ========= CARTÃO DO FORMULÁRIO ========= */
+      .form-card {
+        max-width: 620px;
+        margin: 12px auto;
+        background: #fff;
+        padding: 22px;
+        border-radius: 8px;
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06);
+      }
+
+      .form-card h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: #111;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+        align-items: center;
+      }
+
+      /* campos que ocupam toda a largura do card */
+      .full {
+        width: 100%;
+      }
+
+      /* campos menores (ex: número / cep) */
+      .small {
+        flex: 0 0 140px; /* ajuste a largura fixa se desejar */
+      }
+
+      input[type="text"],
+      input[type="tel"],
+      input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+        color: #222;
+        background: #fff;
+      }
+
+      /* botão principal */
+      .btn-submit {
+        background: #3483fa;
+        color: #fff;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 8px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+
+      /* link secundário (ex: voltar) */
+      .link-secondary {
+        display: inline-block;
+        margin-top: 10px;
+        color: #3483fa;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      /* pequenas instruções / disclaimer */
+      .hint {
+        font-size: 13px;
+        color: #666;
+        margin-top: 8px;
+        line-height: 1.4;
+      }
+
+      /* ========= RESPONSIVO ========= */
+      @media (max-width: 900px) {
+        .form-card {
+          padding: 18px;
+          margin: 10px 12px;
+        }
+        .form-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .small {
+          flex: 1 1 auto;
+        } /* no mobile, números ocupam linha inteira */
+        body {
+          padding-top: 120px;
+        } /* espaço extra para header em telas pequenas (se necessário) */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ========== HEADER + FAIXINHA ========== -->
+    <header class="header-yellow">
+      <div class="container-header">
+        <div class="left-group">
+          <div class="logo">
+            <a href="index.html"
+              ><img src="css/imagens/logo.png" alt="Logo"
+            /></a>
+          </div>
+
+          <div class="search-box">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Buscar produtos, marcas e muito mais..."
+            />
+          </div>
+        </div>
+
+        <div class="right-controls">
+          <a href="teste.html" class="btn-cart" aria-label="Carrinho">
+            🛒 <span class="cart-badge">1</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="sub-header">
+      <a href="teste.html" class="delivery-link"></a>
+    </div>
+
+    <!-- ========== CONTEÚDO: FORMULÁRIO DE ENDEREÇO ========= -->
+    <div class="container-central">
+      <main class="form-card" role="main" aria-labelledby="form-title">
+        <h2 id="form-title">Informe seu endereço de entrega</h2>
+
+        <!-- Formulário: use method/action adequados (aqui GET para exemplo) -->
+        <form action="Entrega.html" method="GET" autocomplete="on">
+          <!-- Rua / Logradouro (campo amplo) -->
+          <div class="form-row">
+            <input
+              type="text"
+              name="endereco_rua"
+              placeholder="Digite seu endereço (Rua, Av. etc.)"
+              class="full"
+              required
+            />
+          </div>
+
+          <!-- Número e Complemento lado a lado em desktop -->
+          <div class="form-row">
+            <input
+              type="text"
+              name="endereco_numero"
+              placeholder="N°"
+              class="small"
+              required
+            />
+            <input
+              type="text"
+              name="endereco_complemento"
+              placeholder="Complemento (opcional)"
+              class="full"
+            />
+          </div>
+
+          <!-- CEP e Telefone (se quiser) -->
+          <div class="form-row">
+            <input
+              type="text"
+              name="endereco_cep"
+              placeholder="CEP"
+              class="small"
+              required
+            />
+            <input
+              type="tel"
+              name="telefone"
+              placeholder="Telefone (opcional)"
+              class="full"
+            />
+          </div>
+
+          <!-- Botão principal -->
+          <button type="button" id="continuarBtn" class="btn-submit">
+            Continuar
+          </button>
+
+          <script>
+            document
+              .getElementById("continuarBtn")
+              .addEventListener("click", function () {
+                // ajuste os seletores se seus inputs tiverem outros name/ids
+                const rua =
+                  document
+                    .querySelector('input[name="endereco_rua"]')
+                    ?.value.trim() || "";
+                const numero =
+                  document
+                    .querySelector('input[name="endereco_numero"]')
+                    ?.value.trim() || "";
+                const cep =
+                  document
+                    .querySelector('input[name="endereco_cep"]')
+                    ?.value.trim() || "";
+
+                if (!rua || !numero || !cep) {
+                  alert(
+                    "Por favor preencha Rua, Número e CEP antes de continuar.",
+                  );
+                  return;
+                }
+
+                const complemento =
+                  document
+                    .querySelector('input[name="endereco_complemento"]')
+                    ?.value.trim() || "";
+                const telefone =
+                  document
+                    .querySelector('input[name="telefone"]')
+                    ?.value.trim() || "";
+
+                const params = new URLSearchParams({
+                  endereco_rua: rua,
+                  endereco_numero: numero,
+                  endereco_complemento: complemento,
+                  endereco_cep: cep,
+                  telefone: telefone,
+                });
+
+                // redireciona para entrega.html com os dados na query string
+                window.location.href = "entrega.html?" + params.toString();
+              });
+          </script>
+          <!-- Texto auxiliar -->
+          <p class="hint">
+            Verifique se o CEP e o número estão corretos para calcular o frete.
+          </p>
+
+          <!-- Link secundário (voltar ou cancelar) -->
+          <a href="index.html" class="link-secondary">Voltar ao início</a>
+        </form>
+      </main>
+    </div>
+
+    <!-- ========== SCRIPTS (opcional: menu lateral) ========= -->
+    <script>
+      // script básico para o botão hamburger (opcional)
+      const menuBtn = document.getElementById("menuBtn");
+      menuBtn &&
+        menuBtn.addEventListener("click", () => {
+          // aqui você pode abrir o side menu se tiver um
+          alert("Abrir menu lateral (adicione seu sideMenu se quiser)");
+        });
+    </script>
+  </body>
+</html>

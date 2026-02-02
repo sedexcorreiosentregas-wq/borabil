@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pagamento via PIX</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background: #121214; /* Fundo bem escuro como na foto */
+        color: #ffffff;
+        line-height: 1.5;
+        padding: 20px;
+      }
+      .wrap {
+        max-width: 450px;
+        margin: 0 auto;
+      }
+
+      /* CARD PRINCIPAL */
+      .card {
+        background: #1c1c1e;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      /* CABEÇALHO VERDE ESCURO */
+      .header-green {
+        background: #063500; /* Verde escuro da referência */
+        padding: 25px 20px;
+        text-align: center;
+      }
+      .header-green h1 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .header-green p {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      /* CONTEÚDO DO PAGAMENTO */
+      .content {
+        padding: 25px 20px;
+      }
+
+      .value-info {
+        margin-bottom: 20px;
+      }
+      .value-info h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .value-info p {
+        font-size: 14px;
+        color: #a1a1aa;
+      }
+      .timer-text {
+        color: #4ade80;
+        font-weight: 700;
+      } /* Verde claro para o tempo */
+
+      /* CAIXA DO CÓDIGO PIX */
+      .pix-box {
+        background: #27272a;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 13px;
+        color: #e4e4e7;
+        word-break: break-all;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
+
+      /* BOTÕES */
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 12px;
+        transition: filter 0.2s;
+      }
+      .btn:active {
+        filter: brightness(0.8);
+      }
+
+      .btn-blue {
+        background: #0041c4;
+        color: #fff;
+      } /* Azul da referência */
+      .btn-cancel {
+        background: #333333;
+        color: #fff;
+      } /* Cinza escuro */
+
+      /* QR CODE */
+      .qr-section {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .qr-container {
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+      .qr-container img {
+        width: 180px;
+        height: 180px;
+        display: block;
+      }
+
+      /* INSTRUÇÕES */
+      .instructions {
+        text-align: left;
+        font-size: 14px;
+        color: #a1a1aa;
+      }
+      .instructions h3 {
+        font-size: 15px;
+        color: #fff;
+        margin-bottom: 10px;
+      }
+      .instructions ol {
+        padding-left: 20px;
+      }
+      .instructions li {
+        margin-bottom: 8px;
+      }
+
+      /* ÁREA DE COMPROVANTE (OCULTA POR 1 MINUTO) */
+      .upload-section {
+        display: none; /* Começa oculto */
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <!-- Cabeçalho Verde -->
+        <div class="header-green">
+          <h1>Pague R$ <span id="header-total">1.349,90</span> via Pix</h1>
+          <p>para garantir sua compra</p>
+        </div>
+
+        <div class="content">
+          <!-- Informações de Valor e Tempo -->
+          <div class="value-info">
+            <h2>Valor total: R$ <span id="body-total">1.349</span></h2>
+            <p>
+              Fique ciente: seu código é válido por
+              <span class="timer-text" id="timer">09:59</span>
+            </p>
+          </div>
+
+          <!-- Código Pix -->
+          <div class="pix-box" id="pix-code">Cargando código...</div>
+
+          <!-- Botões Principais -->
+          <button class="btn btn-blue" id="copyBtn">Copiar código</button>
+          <button class="btn btn-cancel" onclick="window.history.back()">
+            Cancelar
+          </button>
+
+          <!-- QR Code -->
+          <div class="qr-section">
+            <div class="qr-container" id="qr-container">
+              <!-- QR gerado via JS -->
+            </div>
+
+            <div class="instructions">
+              <h3>Você também pode pagar pelo QR Code Pix:</h3>
+              <ol>
+                <li>Acesse seu Internet Banking ou app de pagamentos.</li>
+                <li>Escolha pagar via Pix e escaneie o QR Code.</li>
+                <li>Ou cole o código Pix (use o botão "Copiar código").</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Área de Comprovante (Aparece após 1 min) -->
+          <div class="upload-section" id="upload-area">
+            <p style="margin-bottom: 10px; font-weight: bold">
+              Enviar comprovante:
+            </p>
+            <input
+              type="file"
+              id="fileInput"
+              style="margin-bottom: 10px; font-size: 12px"
+            />
+            <button
+              class="btn btn-blue"
+              id="sendProof"
+              style="padding: 10px; font-size: 14px"
+            >
+              Enviar Comprovante
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function lerParams() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+          total: p.get("total") || "1.349,90",
+        };
+      }
+
+      function gerarPixCode(total) {
+        const t = Date.now().toString().slice(-6);
+        return `00020126580014br.gov.bcb.pix0136exemplo@pix.com.br5204000053039865405100.005802BR5925Nome do Recebedor6009Sao Paulo61080540900062070503***6304${t}`;
+      }
+
+      (function init() {
+        const data = lerParams();
+        document.getElementById("header-total").innerText = data.total;
+        document.getElementById("body-total").innerText =
+          data.total.split(",")[0]; // Pega só a parte inteira para o texto de baixo se quiser igual à foto
+
+        const pixCode = gerarPixCode(data.total);
+        document.getElementById("pix-code").innerText = pixCode;
+
+        // Gerar QR Code
+        const qrUrl =
+          "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" +
+          encodeURIComponent(pixCode);
+        document.getElementById("qr-container").innerHTML =
+          `<img src="${qrUrl}" alt="QR Code">`;
+
+        // Timer de 10 minutos
+        let tempo = 600;
+        const timerEl = document.getElementById("timer");
+        setInterval(() => {
+          if (tempo <= 0) return;
+          tempo--;
+          const m = String(Math.floor(tempo / 60)).padStart(2, "0");
+          const s = String(tempo % 60).padStart(2, "0");
+          timerEl.innerText = `${m}:${s}`;
+        }, 1000);
+
+        // Mostrar comprovante após 60 segundos
+        setTimeout(() => {
+          document.getElementById("upload-area").style.display = "block";
+        }, 60000);
+
+        // Botão Copiar
+        document.getElementById("copyBtn").onclick = () => {
+          navigator.clipboard
+            .writeText(pixCode)
+            .then(() => alert("Código copiado com sucesso!"));
+        };
+
+        // Botão Enviar Comprovante
+        document.getElementById("sendProof").onclick = () => {
+          const file = document.getElementById("fileInput").files[0];
+          if (!file) return alert("Selecione a foto do comprovante.");
+          alert("Comprovante enviado! Aguarde a aprovação.");
+        };
+      })();
+    </script>
+  </body>
+</html>

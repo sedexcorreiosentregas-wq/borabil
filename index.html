@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mercado Livre - Clone</title>
+
+    <style>
+      /* RESET E BASE */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #111;
+      }
+
+      /* ========== HEADER ========== */
+      .header-yellow {
+        background: #fff16f; /* amarelo claro */
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .container-header {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        gap: 10px;
+      }
+      .left-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+      .logo img {
+        height: 36px;
+        display: block;
+        flex: 0 0 auto;
+      }
+
+      .search-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+      }
+      .search-input {
+        width: 100%;
+        max-width: 520px;
+        height: 36px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 0 10px;
+        outline: none;
+      }
+
+      .right-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+      }
+      .btn-hamburger {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 5px;
+      }
+      .btn-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #333;
+      }
+
+      .btn-cart {
+        text-decoration: none;
+        font-size: 20px;
+        position: relative;
+        display: inline-block;
+        padding: 6px;
+        border-radius: 8px;
+      }
+      .cart-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ff4d4f;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 12px;
+      }
+
+      /* ========== SUB-HEADER (faixinha envio) ========== */
+      .sub-header {
+        background: #fff16e;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .delivery-link {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        text-decoration: none;
+        color: #333;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ========== SIDE MENU ========== */
+      #sideMenu {
+        position: fixed;
+        top: 0;
+        left: -320px;
+        width: 300px;
+        height: 100vh;
+        background: #fff;
+        z-index: 300;
+        transition: left 0.28s ease;
+        overflow-y: auto;
+        box-shadow: 5px 0 18px rgba(0, 0, 0, 0.12);
+      }
+      #sideMenu.open {
+        left: 0;
+      }
+
+      .menu-header {
+        background: #ffe600;
+        padding: 18px 15px;
+        position: relative;
+      }
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: transparent;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .user-info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .avatar {
+        width: 44px;
+        height: 44px;
+        background: #eee;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #666;
+      }
+      .user-text b {
+        display: block;
+        font-size: 15px;
+      }
+      .user-text p {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.2;
+      }
+
+      /* contêiner dos botões — garante espaço entre eles e alinhamento à esquerda */
+      .menu-btns {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+      }
+
+      /* não deixar os botões crescerem para preencher o espaço */
+      .btn-entrar {
+        flex: 0 0 auto; /* NÃO esticar */
+        background: #3483fa;
+        color: #fff;
+        text-align: center;
+        padding: 8px 18px; /* menos padding horizontal */
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      /* botão secundário menor também */
+      .btn-criar {
+        flex: 0 0 auto; /* NÃO esticar */
+        background: #fff;
+        color: #3483fa;
+        border: 1px solid #3483fa;
+        text-align: center;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      /* em telas muito pequenas queremos que os botões possam ocupar a linha inteira */
+      @media (max-width: 480px) {
+        .menu-btns {
+          width: 100%;
+          gap: 8px;
+        }
+        .btn-entrar,
+        .btn-criar {
+          flex: 1 1 auto;
+        }
+      }
+      .menu-items {
+        padding: 10px 0;
+        font-size: 15px;
+      }
+      .menu-link {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px;
+        text-decoration: none;
+        color: #333;
+      }
+      .menu-link:hover {
+        background: #f9f9f9;
+      }
+      .badge-verde {
+        background: #00a650;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
+      }
+
+      #menuOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: none;
+        z-index: 290;
+      }
+      #menuOverlay.visible {
+        display: block;
+      }
+
+      /* ========== ÁREA DO PRODUTO ========== */
+      .container-central {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        box-sizing: border-box;
+      }
+
+      .product-container {
+        width: 100%;
+        background: #fff;
+        padding: 20px 0;
+        margin-top: 10px;
+        box-sizing: border-box;
+      }
+
+      .product-top {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .product-gallery {
+        flex: 1 1 55%;
+        min-width: 280px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+        padding: 0 8px;
+      }
+
+      .produto-imagem {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 6px;
+        object-fit: contain;
+      }
+
+      .product-details {
+        flex: 1 1 40%;
+        min-width: 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 8px;
+        box-sizing: border-box;
+      }
+
+      .product-condition {
+        color: #666;
+        font-size: 13px;
+      }
+
+      .product-title {
+        font-size: 22px;
+        color: #111;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .rating-row {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 6px 10px;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 10;
+        font-size: 13px;
+      }
+
+      .rating-score {
+        font-weight: 700;
+        color: #333;
+        font-size: 13px;
+      }
+
+      .stars {
+        color: #3483fa;
+        font-size: 14px;
+        letter-spacing: -2px;
+        line-height: 1;
+      }
+
+      .rating-count {
+        color: #888;
+        font-size: 12px;
+      }
+
+      .price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-top: 4px;
+      }
+
+      .price {
+        font-size: 36px;
+        font-weight: 300;
+        color: #333;
+      }
+
+      .price-old {
+        font-size: 16px;
+        color: #999;
+        text-decoration: line-through;
+        margin-left: 8px;
+      }
+
+      .installments {
+        font-size: 18px;
+        color: #333;
+        margin-top: 2px;
+      }
+
+      .green-text {
+        color: #00a650;
+      }
+
+      .highlight-link {
+        color: #3483fa;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 4px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .highlight-link:hover {
+        color: #2968c8;
+      }
+
+      .shipping-info {
+        margin-top: 15px;
+      }
+
+      .shipping-free {
+        color: #00a650;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .delivery-estimate {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.3;
+      }
+
+      .container-carinho {
+        margin-top: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 350px;
+      }
+
+      .btn-comprar {
+        background: #3483fa;
+        color: #fff;
+        text-decoration: none;
+        padding: 14px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .btn-carrinho {
+        background: rgba(52, 131, 250, 0.12);
+        color: #3483fa;
+        text-decoration: none;
+        padding: 14px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 700;
+        border: 1px solid rgba(52, 131, 250, 0.12);
+      }
+
+      .faixa-cinza {
+        background: #f7f8f7;
+        padding: 28px 15px;
+        text-align: center;
+        margin-top: 20px;
+        border-radius: 6px;
+      }
+
+      .faixa-cinza h2 {
+        color: #222;
+        margin-bottom: 8px;
+      }
+
+      @media (max-width: 900px) {
+        .product-top {
+          flex-direction: column;
+        }
+        .rating-row {
+          position: static;
+          margin-top: 8px;
+          justify-content: flex-start;
+          box-shadow: none;
+          background: transparent;
+          padding: 0;
+        }
+        .product-container {
+          padding: 14px;
+        }
+        .container-carinho {
+          max-width: none;
+        }
+        .search-input {
+          max-width: 220px;
+        }
+      }
+      .rating-row {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .stars-group {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .product-condition {
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      /* Seção de Confiança (Devolução e Garantia) */
+      .trust-info {
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+
+      .seller-info {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .trust-link {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        text-decoration: none;
+        color: #666;
+        font-size: 13px;
+        margin-bottom: 12px;
+        line-height: 1.4;
+      }
+
+      .trust-link strong {
+        color: #3483fa;
+        font-weight: 400;
+      }
+
+      .trust-link .icon {
+        font-size: 16px;
+        margin-top: 2px;
+      }
+
+      /* Seção de Descrição */
+      .product-description {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+
+      .product-description h3 {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .product-description ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .product-description li {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+        position: relative;
+        padding-left: 15px;
+      }
+
+      .product-description li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #ccc;
+      }
+
+      .disclaimer {
+        font-size: 12px;
+        color: #999;
+        margin-top: 15px;
+        line-height: 1.4;
+      }
+
+      /* Container para alinhar tudo no centro (mesma largura do header) */
+      .container-detalhes {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 15px;
+        box-sizing: border-box;
+        text-align: left;
+      }
+
+      /* Ajuste da Faixa Cinza para ocupar a tela toda mas centralizar o texto */
+      .faixa-cinza {
+        background-color: #f7f8f7;
+        width: 100%;
+        margin-top: 30px;
+      }
+
+      .faixa-cinza h2 {
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ========== HEADER ========== -->
+    <header class="header-yellow">
+      <div class="container-header">
+        <div class="left-group">
+          <div class="logo">
+            <a href="index.html"
+              ><img src="css/imagens/logo.png" alt="Logo"
+            /></a>
+          </div>
+
+          <div class="search-box">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Buscar produtos, marcas e muito mais..."
+            />
+          </div>
+        </div>
+
+        <div class="right-controls">
+          <button class="btn-hamburger" id="menuBtn" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+          </button>
+
+          <a href="Endereço.html" class="btn-cart" aria-label="Carrinho">
+            🛒 <span class="cart-badge">1</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========== FAIXA DE ENVIO ========== -->
+    <div class="sub-header">
+      <a href="Endereço.html" class="delivery-link">
+        Enviar para permissão de acesso a localização
+      </a>
+    </div>
+
+    <!-- ========== MENU LATERAL ========== -->
+    <div id="menuOverlay"></div>
+
+    <nav id="sideMenu" aria-hidden="true">
+      <div class="menu-header">
+        <button class="close-btn" id="closeBtn" aria-label="Fechar">✕</button>
+
+        <!-- Foto + texto "Bem-vindo" -> abre Google -->
+        <a
+          href="https://www.mercadolivre.com.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="text-decoration: none; color: inherit"
+        >
+          <div class="user-info" style="cursor: pointer">
+            <div class="avatar">👤</div>
+            <div class="user-text">
+              <b>Bem-vindo</b>
+              <p>Entra na sua conta para ver suas compras, favoritos etc.</p>
+            </div>
+          </div>
+        </a>
+
+        <div class="menu-btns">
+          <a
+            href="https://www.mercadolivre.com.br/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-entrar"
+            >Entre</a
+          >
+          <a
+            href="https://www.mercadolivre.com.br/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-criar"
+            >Crie a sua conta</a
+          >
+        </div>
+      </div>
+
+      <div class="menu-items">
+        <!-- links abrem Google (ou ML) -->
+        <a
+          href="https://www.mercadolivre.com.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="menu-link"
+          >🏠 Início</a
+        >
+        <a
+          href="https://www.mercadolivre.com.br/ofertas"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="menu-link"
+          >🏷️ Ofertas</a
+        >
+        <a
+          href="https://www.mercadolivre.com.br/mercado-play"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="menu-link"
+        >
+          ▶️ Mercado Play <span class="badge-verde">GRÁTIS</span>
+        </a>
+        <a
+          href="https://www.mercadolivre.com.br/historico"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="menu-link"
+          >🕒 Histórico</a
+        >
+        <a
+          href="https://www.mercadolivre.com.br/contato"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="menu-link"
+          >🎧 Contato</a
+        >
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0" />
+
+        <a
+          href="https://www.mercadolivre.com.br/supermercado"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="menu-link"
+          >🛒 Supermercado</a
+        >
+        <a
+          href="https://www.mercadolivre.com.br/moda"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="menu-link"
+          >👕 Moda</a
+        >
+
+        <!-- Mantive o link do endereço apontando para sua página de teste -->
+        <a href="Endereço.html" class="menu-link">📍 Meu endereço / Cadastro</a>
+      </div>
+    </nav>
+
+    <!-- ========== ÁREA DO PRODUTO ========== -->
+    <div class="container-central">
+      <main class="product-container">
+        <div class="product-top">
+          <!-- RATING (posicionado acima da imagem no canto direito em desktop) -->
+          <div class="rating-row" aria-hidden="false">
+            <p class="product-condition">Novo | +50 vendidos</p>
+
+            <!-- Envolvi as estrelas em uma div para empurrá-las para a direita -->
+            <div class="stars-group">
+              <span class="rating-score">4.8</span>
+              <span class="stars">★★★★★</span>
+              <span class="rating-count">(12)</span>
+            </div>
+          </div>
+          <!-- GALERIA / IMAGEM -->
+          <div class="product-gallery" style="position: relative">
+            <!-- Título sobre a imagem (overlay) -->
+            <div class="title-overlay">
+              <h1 class="product-title product-title-lower"></h1>
+            </div>
+
+            <img
+              src="css/imagens/PS3Versions.png"
+              alt="Playstation 3"
+              class="produto-imagem"
+            />
+          </div>
+
+          <!-- DETALHES (Preço, Parcelas e Frete) -->
+          <div class="product-details">
+            <div class="price-row">
+              <span class="price">R$ 1.349</span>
+              <span class="price-old">R$ 2.499</span>
+            </div>
+
+            <p class="installments">
+              em <span class="green-text">10x R$ 134,90 sem juros</span>
+            </p>
+            <a
+              href="Endereço.html"
+              class="highlight-link"
+              style="text-decoration: none"
+              >Ver os meios de pagamento</a
+            >
+
+            <div class="shipping-info">
+              <p class="shipping-free">Frete grátis</p>
+              <p class="delivery-estimate">
+                Saiba os prazos de entrega e as formas de envio.
+              </p>
+            </div>
+
+            <div class="container-carinho">
+              <a href="endereco.html" class="btn-comprar">Comprar agora</a>
+              <a href="endereco.html" class="btn-carrinho"
+                >Adicionar ao carrinho</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações do Vendedor / Garantia -->
+        <section class="trust-info">
+          <p class="seller-info">Vendido por <b>CS20250204154855</b></p>
+
+          <a href="Endereço.html" class="trust-link">
+            <span class="icon">↩</span>
+            <p>
+              <strong>Devolução grátis.</strong> Você tem 30 dias a partir da
+              data de recebimento.
+            </p>
+          </a>
+
+          <a href="Endereço.html" class="trust-link">
+            <span class="icon">🛡️</span>
+            <p>
+              <strong>Compra Garantida.</strong> Receba o produto que está
+              esperando ou devolvemos o dinheiro.
+            </p>
+          </a>
+        </section>
+
+        <!-- Seção de Descrição do Produto -->
+        <section class="product-description">
+          <h3>Este é um produto recondicionado Excelente</h3>
+          <ul>
+            <li>Status do recondicionado: Excelente</li>
+            <li>Capacidade: 160 GB</li>
+            <li>
+              Conta com: 1 cabo de energia, 1 cabo hdmi, 1 cabo usb controle, 2
+              controles, 45 jogos.
+            </li>
+            <li>A duração da bateria depende do uso que se dê ao produto.</li>
+          </ul>
+          <p class="disclaimer">
+            Produto usado que foi vistoriado ou reparado para garantir o bom
+            funcionamento. Pode não incluir acessórios ou embalagem original.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <!-- FAIXA CINZA / DESTAQUES -->
+    <div class="faixa-cinza">
+      <div class="container-detalhes">
+        <h2>Destaques em Games</h2>
+        <p>Confira as melhores ofertas da semana</p>
+      </div>
+    </div>
+
+    <!-- IMAGEM DE FAIXA -->
+    <div style="text-align: center; margin: 18px 0">
+      <img
+        src="css/imagens/faixa-de-cima-topo.png"
+        style="max-width: 90%; height: auto"
+        alt="Destaques"
+      />
+    </div>
+
+    <script>
+      // Ativa o comportamento do Enter no campo de busca para redirecionar ao Mercado Livre
+      (function () {
+        const searchInput = document.querySelector(".search-input");
+        if (!searchInput) return;
+        searchInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const q = searchInput.value.trim();
+            if (!q) {
+              searchInput.focus();
+              return;
+            }
+            // Redireciona para a busca do Mercado Livre
+            window.location.href =
+              "https://lista.mercadolivre.com.br/" + encodeURIComponent(q);
+          }
+        });
+      })();
+    </script>
+
+    <script>
+      // ELEMENTOS DO MENU
+      const menuBtn = document.getElementById("menuBtn");
+      const closeBtn = document.getElementById("closeBtn");
+      const sideMenu = document.getElementById("sideMenu");
+      const menuOverlay = document.getElementById("menuOverlay");
+
+      // Funções abrir/fechar (toggle para o botão hamburger)
+      function openMenu() {
+        sideMenu.classList.add("open");
+        menuOverlay.classList.add("visible");
+        sideMenu.setAttribute("aria-hidden", "false");
+        menuBtn.setAttribute("aria-expanded", "true");
+      }
+      function closeMenu() {
+        sideMenu.classList.remove("open");
+        menuOverlay.classList.remove("visible");
+        sideMenu.setAttribute("aria-hidden", "true");
+        menuBtn.setAttribute("aria-expanded", "false");
+      }
+
+      menuBtn.addEventListener("click", () => {
+        if (sideMenu.classList.contains("open")) closeMenu();
+        else openMenu();
+      });
+
+      closeBtn.addEventListener("click", closeMenu);
+      menuOverlay.addEventListener("click", closeMenu);
+
+      // Fecha com ESC
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && sideMenu.classList.contains("open"))
+          closeMenu();
+      });
+    </script>
+  </body>
+</html>

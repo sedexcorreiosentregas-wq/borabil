@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Escolha o Frete — Mercado Livre</title>
+    <style>
+      /* RESET E BASE */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+        padding-top: 110px; /* Espaço para o header fixo */
+      }
+
+      /* ========== HEADER AMARELO (PADRÃO) ========== */
+      .header-yellow {
+        background: #fff16f;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+      .container-header {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+      }
+      .logo img {
+        height: 34px;
+        display: block;
+      }
+
+      /* ========== SUB-HEADER (MOSTRAR ENDEREÇO) ========== */
+      .sub-header {
+        background: #fff16e;
+        padding: 8px 0;
+        position: fixed;
+        top: 48px;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .address-display {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        font-size: 13px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ========== CONTEÚDO CENTRALIZADO ========== */
+      .main-container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 0 15px;
+      }
+
+      .delivery-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .delivery-card h2 {
+        font-size: 19px;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      /* ========== OPÇÕES DE FRETE ========== */
+      .delivery-option {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .delivery-option:hover {
+        border-color: #3483fa;
+      }
+
+      .delivery-option label {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .delivery-option input[type="radio"] {
+        margin-right: 15px;
+        transform: scale(1.2);
+      }
+
+      .opt-info {
+        flex: 1;
+      }
+      .opt-title {
+        font-weight: 700;
+        font-size: 16px;
+        color: #111;
+      }
+      .opt-sub {
+        font-size: 13px;
+        color: #00a650;
+        margin-top: 2px;
+      }
+      .opt-price {
+        font-weight: 600;
+        font-size: 16px;
+        color: #111;
+      }
+
+      /* ========== BOTÃO CONTINUAR ========== */
+      .btn-continue {
+        background: #3483fa;
+        color: #fff;
+        border: none;
+        width: 100%;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: 0.2s;
+      }
+      .btn-continue:hover {
+        background: #2968c8;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header-yellow">
+      <div class="container-header">
+        <div class="logo">
+          <a href="index.html"><img src="css/imagens/logo.png" alt="Logo" /></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- SUB-HEADER COM O ENDEREÇO DINÂMICO -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-container">
+      <div class="delivery-card">
+        <h2>Como você quer receber sua compra?</h2>
+
+        <form action="pagina3.html" method="GET">
+          <!-- Opção 1 -->
+          <div class="delivery-option">
+            <label for="fast">
+              <input
+                type="radio"
+                id="fast"
+                name="frete"
+                value="9.90"
+                required
+              />
+              <div class="opt-info">
+                <div class="opt-title">Chegará amanhã</div>
+                <div class="opt-sub">Entrega mais rápida</div>
+              </div>
+              <div class="opt-price">R$ 9,90</div>
+            </label>
+          </div>
+
+          <!-- Opção 2 -->
+          <div class="delivery-option">
+            <label for="standard">
+              <input type="radio" id="standard" name="frete" value="0.00" />
+              <div class="opt-info">
+                <div class="opt-title">Padrão (3 a 5 dias)</div>
+                <div class="opt-sub">Mais barato</div>
+              </div>
+              <div class="opt-price">Grátis</div>
+            </label>
+          </div>
+
+          <a href="pagamento.html" class="btn-continue">Continuar</a>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      // SCRIPT PARA PEGAR O ENDEREÇO DA URL
+      function carregarEndereco() {
+        const params = new URLSearchParams(window.location.search);
+        const rua = params.get("endereco_rua") || "";
+        const num = params.get("endereco_numero") || "";
+        const cep = params.get("endereco_cep") || "";
+
+        const display = document.getElementById("display-endereco");
+
+        if (rua) {
+          display.innerText = `${rua}, ${num} - CEP: ${cep}`;
+        } else {
+          display.innerText = "São Paulo, 04305000"; // Padrão caso não venha nada
+        }
+      }
+
+      // Executa ao carregar a página
+      window.onload = carregarEndereco;
+    </script>
+  </body>
+</html>

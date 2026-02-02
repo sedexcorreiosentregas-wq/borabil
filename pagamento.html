@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pagamento — Escolha o método</title>
+    <style>
+      /* ===== RESET / BASE ===== */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #222;
+        padding-top: 110px; /* espaço para header + sub-header fixos */
+      }
+
+      /* ===== HEADER AMARELO (integrado) ===== */
+      .header-yellow {
+        background: #fff16f;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+      .container-header {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .left-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+      .logo img {
+        height: 36px;
+        display: block;
+      }
+      .search-box {
+        flex: 1;
+        min-width: 0;
+      }
+      .search-input {
+        width: 100%;
+        max-width: 520px;
+        height: 36px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 0 10px;
+      }
+      .right-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+      }
+      .btn-hamburger {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 5px;
+      }
+      .btn-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #333;
+      }
+      .btn-cart {
+        text-decoration: none;
+        font-size: 20px;
+        position: relative;
+        display: inline-block;
+        padding: 6px;
+        border-radius: 8px;
+      }
+      .cart-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ff4d4f;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 12px;
+      }
+
+      /* ===== SUB-HEADER (faixinha envio) ===== */
+      .sub-header {
+        background: #fff16e;
+        padding: 6px 0;
+        position: fixed;
+        top: 48px;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .address-display {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+        font-size: 13px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .address-display b {
+        margin-left: 6px;
+        font-weight: 700;
+      }
+
+      /* ===== SIDE MENU (simples) ===== */
+      #sideMenu {
+        position: fixed;
+        top: 0;
+        left: -320px;
+        width: 300px;
+        height: 100vh;
+        background: #fff;
+        z-index: 300;
+        transition: left 0.28s ease;
+        overflow-y: auto;
+        box-shadow: 5px 0 18px rgba(0, 0, 0, 0.12);
+      }
+      #sideMenu.open {
+        left: 0;
+      }
+      #menuOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: none;
+        z-index: 290;
+      }
+      #menuOverlay.visible {
+        display: block;
+      }
+
+      .menu-header {
+        background: #ffe600;
+        padding: 18px 15px;
+        position: relative;
+      }
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: transparent;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      .menu-items {
+        padding: 10px 0;
+        font-size: 15px;
+      }
+      .menu-link {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px;
+        text-decoration: none;
+        color: #333;
+      }
+      .menu-link:hover {
+        background: #f9f9f9;
+      }
+
+      /* ===== PAGAMENTO (mantido) ===== */
+      .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0 15px;
+      }
+      .payment-wrap {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 20px;
+        align-items: start;
+      }
+      .card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      }
+      h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: #111;
+      }
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .payment-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 12px;
+        background: #fff;
+        cursor: pointer;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s;
+      }
+      .payment-option:hover {
+        border-color: #d0e6ff;
+        box-shadow: 0 4px 14px rgba(52, 131, 250, 0.06);
+      }
+      .payment-option.selected {
+        border-color: #3483fa;
+        box-shadow: 0 6px 26px rgba(52, 131, 250, 0.08);
+      }
+      .payment-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        align-items: flex-start;
+      }
+      .payment-title {
+        font-weight: 700;
+        color: #111;
+      }
+      .payment-sub {
+        font-size: 13px;
+        color: #666;
+      }
+      .pay-area {
+        margin-top: 12px;
+        display: none;
+      }
+      .pay-area.active {
+        display: block;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .field input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+      }
+      .row .small {
+        flex: 0 0 120px;
+      }
+      .summary {
+        background: #fff;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        height: max-content;
+      }
+      .order-line {
+        display: flex;
+        justify-content: space-between;
+        color: #333;
+      }
+      .total {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .btn-continue {
+        background: #3483fa;
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 6px;
+      }
+      .btn-continue:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 980px) {
+        .payment-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="header-yellow">
+      <div class="container-header">
+        <div class="left-group">
+          <div class="logo">
+            <a href="index.html"
+              ><img src="css/imagens/logo.png" alt="Logo"
+            /></a>
+          </div>
+
+          <div class="search-box">
+            <input
+              class="search-input"
+              type="text"
+              placeholder="Buscar produtos, marcas e muito mais..."
+            />
+          </div>
+        </div>
+
+        <div class="right-controls">
+          <button class="btn-hamburger" id="openMenu" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+          </button>
+
+          <a href="teste.html" class="btn-cart" aria-label="Carrinho"
+            >🛒 <span class="cart-badge">1</span></a
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== SUB-HEADER (faixinha envio) ===== -->
+    <div class="sub-header">
+      <div class="address-display">
+        📍 Enviar para: <b id="display-endereco">Carregando endereço...</b>
+      </div>
+    </div>
+
+    <!-- ===== SIDE MENU ===== -->
+    <div id="sideMenu" aria-hidden="true">
+      <div class="menu-header">
+        <button class="close-btn" id="closeMenu" aria-label="Fechar menu">
+          ✕
+        </button>
+        <div class="user-info">
+          <div class="avatar">G</div>
+          <div class="user-text">
+            <b>Olá, convidado</b>
+            <p>Entre ou cadastre-se</p>
+          </div>
+        </div>
+        <div class="menu-btns" style="display: flex; gap: 8px">
+          <a class="btn-entrar" href="#">Entrar</a>
+          <a class="btn-criar" href="#">Criar conta</a>
+        </div>
+      </div>
+      <nav class="menu-items">
+        <a class="menu-link" href="index.html">Início</a>
+        <a class="menu-link" href="index.html#ofertas">Ofertas</a>
+        <a class="menu-link" href="index.html#categorias">Categorias</a>
+      </nav>
+    </div>
+    <div id="menuOverlay" aria-hidden="true"></div>
+
+    <!-- ===== CONTEÚDO PRINCIPAL (PAGAMENTO) ===== -->
+    <div class="container">
+      <div class="payment-wrap">
+        <!-- COLUNA ESQUERDA: opções -->
+        <div class="card">
+          <h2>Como você prefere pagar?</h2>
+
+          <div
+            class="options"
+            role="radiogroup"
+            aria-label="Opções de pagamento"
+          >
+            <div
+              class="payment-option"
+              role="radio"
+              data-method="pix"
+              tabindex="0"
+              aria-checked="false"
+            >
+              <div class="payment-info">
+                <div class="payment-title">PIX</div>
+                <div class="payment-sub">Aprovação imediata</div>
+              </div>
+              <div class="payment-price"></div>
+            </div>
+
+            <div
+              class="payment-option"
+              role="radio"
+              data-method="card"
+              tabindex="0"
+              aria-checked="false"
+            >
+              <div class="payment-info">
+                <div class="payment-title">Cartão de crédito</div>
+                <div class="payment-sub">Parcelamento e outras opções</div>
+              </div>
+              <div class="payment-price">Parcelar</div>
+            </div>
+          </div>
+
+          <div id="pix-area" class="pay-area" aria-hidden="true">
+            <p><strong>PIX instantâneo</strong></p>
+            <p>
+              Ao escolher PIX você será levado para a tela de pagamento via PIX.
+            </p>
+          </div>
+
+          <form
+            id="card-area"
+            class="pay-area"
+            aria-hidden="true"
+            onsubmit="return false;"
+          >
+            <div class="field">
+              <label class="field"
+                ><span>Nome (como no cartão)</span>
+                <input
+                  type="text"
+                  id="card-name"
+                  placeholder="Seu nome completo"
+                  autocomplete="cc-name"
+                />
+              </label>
+            </div>
+            <div class="field">
+              <label class="field"
+                ><span>Número do cartão</span>
+                <input
+                  type="text"
+                  id="card-number"
+                  inputmode="numeric"
+                  placeholder="1234 5678 9012 3456"
+                  maxlength="19"
+                  autocomplete="cc-number"
+                />
+              </label>
+            </div>
+            <div class="row">
+              <div class="field small">
+                <label
+                  ><span>Validade (MM/AA)</span>
+                  <input
+                    type="text"
+                    id="card-exp"
+                    placeholder="MM/AA"
+                    maxlength="5"
+                    autocomplete="cc-exp"
+                  />
+                </label>
+              </div>
+              <div class="field small">
+                <label
+                  ><span>CVV</span>
+                  <input
+                    type="text"
+                    id="card-cvv"
+                    inputmode="numeric"
+                    maxlength="4"
+                    placeholder="123"
+                    autocomplete="cc-csc"
+                  />
+                </label>
+              </div>
+            </div>
+          </form>
+
+          <div id="boleto-area" class="pay-area" aria-hidden="true">
+            <p><strong>Boleto bancário</strong></p>
+            <p>Ao finalizar será gerado um boleto com validade de 3 dias.</p>
+          </div>
+        </div>
+
+        <!-- COLUNA DIREITA: resumo -->
+        <aside class="summary">
+          <div>
+            <div class="order-line">
+              <div>Produto</div>
+              <div><strong>PS3 Playstation 3</strong></div>
+            </div>
+            <div class="order-line">
+              <div>Preço</div>
+              <div>R$ 1.349</div>
+            </div>
+            <div class="order-line">
+              <div>Frete</div>
+              <div id="order-frete">—</div>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #f0f0f0; padding-top: 10px">
+            <div class="order-line">
+              <div>Total</div>
+              <div class="total" id="order-total">R$ 1.349</div>
+            </div>
+          </div>
+
+          <button id="finalize-btn" class="btn-continue" disabled>
+            Finalizar compra
+          </button>
+          <small style="display: block; margin-top: 8px; color: #666"
+            >Após finalizar você será redirecionado (simulação).</small
+          >
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      // ===== MENU LATERAL =====
+      (function () {
+        const openBtn = document.getElementById("openMenu");
+        const closeBtn = document.getElementById("closeMenu");
+        const side = document.getElementById("sideMenu");
+        const overlay = document.getElementById("menuOverlay");
+
+        function openMenu() {
+          side.classList.add("open");
+          overlay.classList.add("visible");
+          side.setAttribute("aria-hidden", "false");
+          overlay.setAttribute("aria-hidden", "false");
+        }
+        function closeMenu() {
+          side.classList.remove("open");
+          overlay.classList.remove("visible");
+          side.setAttribute("aria-hidden", "true");
+          overlay.setAttribute("aria-hidden", "true");
+        }
+
+        openBtn && openBtn.addEventListener("click", openMenu);
+        closeBtn && closeBtn.addEventListener("click", closeMenu);
+        overlay && overlay.addEventListener("click", closeMenu);
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeMenu();
+        });
+      })();
+
+      // ===== PAGAMENTO (mantido e integrado) =====
+      (function () {
+        function lerEndereco() {
+          const params = new URLSearchParams(window.location.search);
+          const rua = params.get("endereco_rua") || "";
+          const numero = params.get("endereco_numero") || "";
+          const cep = params.get("endereco_cep") || "";
+          if (rua) return { rua, numero, cep };
+          try {
+            const raw = localStorage.getItem("meuEndereco");
+            if (raw) {
+              const obj = JSON.parse(raw);
+              return {
+                rua: obj.rua || "",
+                numero: obj.numero || "",
+                cep: obj.cep || "",
+              };
+            }
+          } catch (e) {
+            console.warn("Erro lendo localStorage:", e);
+          }
+          return { rua: "São Paulo", numero: "", cep: "04305000" };
+        }
+
+        const address = lerEndereco();
+        const display = document.getElementById("display-endereco");
+        display.innerText =
+          address.rua +
+          (address.numero ? ", " + address.numero : "") +
+          (address.cep ? " - CEP: " + address.cep : "");
+
+        const options = Array.from(
+          document.querySelectorAll(".payment-option"),
+        );
+        const pixArea = document.getElementById("pix-area");
+        const cardArea = document.getElementById("card-area");
+        const boletoArea = document.getElementById("boleto-area");
+        const finalizeBtn = document.getElementById("finalize-btn");
+        const orderFrete = document.getElementById("order-frete");
+        const orderTotal = document.getElementById("order-total");
+
+        const produtoValor = 1349.0;
+
+        function atualizarResumo(frete) {
+          orderFrete.innerText =
+            frete === 0 ? "Grátis" : "R$ " + frete.toFixed(2).replace(".", ",");
+          const total = produtoValor + frete;
+          orderTotal.innerText = "R$ " + total.toFixed(2).replace(".", ",");
+        }
+
+        function resetSelection() {
+          options.forEach((o) => {
+            o.classList.remove("selected");
+            o.setAttribute("aria-checked", "false");
+          });
+          [pixArea, cardArea, boletoArea].forEach((a) => {
+            if (a) {
+              a.classList.remove("active");
+              a.setAttribute("aria-hidden", "true");
+            }
+          });
+          finalizeBtn.disabled = true;
+          finalizeBtn.removeAttribute("data-method");
+        }
+
+        function selectOption(option) {
+          resetSelection();
+          option.classList.add("selected");
+          option.setAttribute("aria-checked", "true");
+          const method = option.dataset.method;
+
+          if (method === "pix") {
+            const params = new URLSearchParams(window.location.search);
+            const freteValue = 0.0;
+            params.set("metodo", "pix");
+            params.set("frete", freteValue.toFixed(2));
+            const total = produtoValor + freteValue;
+            params.set("total", total.toFixed(2));
+            // redireciona direto para pix.html com params
+            window.location.href = "pix.html?" + params.toString();
+            return;
+          }
+
+          if (method === "card") {
+            cardArea.classList.add("active");
+            cardArea.setAttribute("aria-hidden", "false");
+            atualizarResumo(9.9);
+          }
+
+          finalizeBtn.disabled = false;
+          finalizeBtn.dataset.method = method;
+        }
+
+        options.forEach((option) => {
+          option.addEventListener("click", () => selectOption(option));
+          option.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              selectOption(option);
+            }
+          });
+        });
+
+        finalizeBtn.addEventListener("click", () => {
+          const method = finalizeBtn.dataset.method;
+          if (!method) return;
+
+          if (method === "card") {
+            const name = document.getElementById("card-name").value.trim();
+            const number = document
+              .getElementById("card-number")
+              .value.replace(/\s/g, "")
+              .trim();
+            const exp = document.getElementById("card-exp").value.trim();
+            const cvv = document.getElementById("card-cvv").value.trim();
+            if (!name || number.length < 12 || !exp || cvv.length < 3) {
+              alert("Preencha todos os dados do cartão corretamente.");
+              return;
+            }
+          }
+
+          const freteText = orderFrete.innerText;
+          const totalText = orderTotal.innerText;
+          const pedido = {
+            produto: "PS3 Playstation 3",
+            preco: produtoValor,
+            frete: freteText,
+            total: totalText,
+            metodo: method,
+            endereco: address,
+          };
+          localStorage.setItem("ultimoPedido", JSON.stringify(pedido));
+          window.location.href = "confirmacao.html";
+        });
+
+        // máscaras simples
+        const cardNumber = document.getElementById("card-number");
+        if (cardNumber) {
+          cardNumber.addEventListener("input", (e) => {
+            let v = e.target.value.replace(/\D/g, "").slice(0, 16);
+            v = v.match(/.{1,4}/g)?.join(" ") || v;
+            e.target.value = v;
+          });
+        }
+        const cardExp = document.getElementById("card-exp");
+        if (cardExp) {
+          cardExp.addEventListener("input", (e) => {
+            let v = e.target.value.replace(/\D/g, "").slice(0, 4);
+            if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
+            e.target.value = v;
+          });
+        }
+
+        // pre-selecao por query ?metodo=pix
+        const params = new URLSearchParams(window.location.search);
+        const prefer = params.get("metodo");
+        if (prefer) {
+          const opt = options.find((o) => o.dataset.method === prefer);
+          if (opt) selectOption(opt);
+        }
+      })();
+    </script>
+  </body>
+</html>
