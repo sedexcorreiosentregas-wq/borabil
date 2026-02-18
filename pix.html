@@ -226,13 +226,13 @@
       function lerParams() {
         const p = new URLSearchParams(window.location.search);
         return {
-          total: p.get("total") || "1.349,90",
+          total: p.get("total") || "1.1500,00",
         };
       }
 
       function gerarPixCode(total) {
         const t = Date.now().toString().slice(-6);
-        return `00020126580014br.gov.bcb.pix0136exemplo@pix.com.br5204000053039865405100.005802BR5925Nome do Recebedor6009Sao Paulo61080540900062070503***6304${t}`;
+        return `00020126750014br.gov.bcb.pix0136eb430722-d1af-4720-bad8-83252149d67a0213PlayStation 552040000530398654071500.005802BR5917Gislaine Caroline6009Sao Paulo62230519daqr51448672435547463044225`;
       }
 
       (function init() {
