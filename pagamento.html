@@ -15,10 +15,10 @@
         font-family: Arial, sans-serif;
         background: #f5f5f5;
         color: #222;
-        padding-top: 110px; /* espaço para header + sub-header fixos */
+        padding-top: 70px; /* Ajustado pois removemos a sub-header */
       }
 
-      /* ===== HEADER AMARELO (integrado) ===== */
+      /* ===== HEADER AMARELO ===== */
       .header-yellow {
         background: #fff16f;
         padding: 8px 0;
@@ -100,33 +100,7 @@
         border-radius: 12px;
       }
 
-      /* ===== SUB-HEADER (faixinha envio) ===== */
-      .sub-header {
-        background: #fff16e;
-        padding: 6px 0;
-        position: fixed;
-        top: 48px;
-        left: 0;
-        right: 0;
-        z-index: 99;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      }
-      .address-display {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 15px;
-        font-size: 13px;
-        color: #333;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .address-display b {
-        margin-left: 6px;
-        font-weight: 700;
-      }
-
-      /* ===== SIDE MENU (simples) ===== */
+      /* ===== SIDE MENU ===== */
       #sideMenu {
         position: fixed;
         top: 0;
@@ -183,7 +157,7 @@
         background: #f9f9f9;
       }
 
-      /* ===== PAGAMENTO (mantido) ===== */
+      /* ===== PAGAMENTO ===== */
       .container {
         max-width: 1000px;
         margin: 20px auto;
@@ -227,7 +201,6 @@
       }
       .payment-option:hover {
         border-color: #d0e6ff;
-        box-shadow: 0 4px 14px rgba(52, 131, 250, 0.06);
       }
       .payment-option.selected {
         border-color: #3483fa;
@@ -265,6 +238,10 @@
         border: 1px solid #ddd;
         border-radius: 6px;
         font-size: 15px;
+        outline: none;
+      }
+      .field input:focus {
+        border-color: #3483fa;
       }
       .row {
         display: flex;
@@ -307,6 +284,13 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+      .card-link {
+        display: block;
+        margin-top: 10px;
+        color: #3483fa;
+        text-decoration: none;
+        font-size: 14px;
+      }
 
       @media (max-width: 980px) {
         .payment-wrap {
@@ -325,7 +309,6 @@
               ><img src="css/imagens/logo.png" alt="Logo"
             /></a>
           </div>
-
           <div class="search-box">
             <input
               class="search-input"
@@ -334,388 +317,168 @@
             />
           </div>
         </div>
-
         <div class="right-controls">
-          <button class="btn-hamburger" id="openMenu" aria-label="Abrir menu">
+          <button class="btn-hamburger" id="openMenu">
             <span></span><span></span><span></span>
           </button>
-
-          <a href="teste.html" class="btn-cart" aria-label="Carrinho"
+          <a href="teste.html" class="btn-cart"
             >🛒 <span class="cart-badge">1</span></a
           >
         </div>
       </div>
     </header>
 
-    <!-- ===== SUB-HEADER (faixinha envio) ===== -->
-    <div class="sub-header">
-      <div class="address-display">
-        📍 Enviar para: <b id="display-endereco"></b>
-      </div>
-    </div>
-
-    <!-- ===== SIDE MENU ===== -->
-    <div id="sideMenu" aria-hidden="true">
-      <div class="menu-header">
-        <button class="close-btn" id="closeMenu" aria-label="Fechar menu">
-          ✕
-        </button>
-        <div class="user-info">
-          <div class="avatar">G</div>
-          <div class="user-text">
-            <b>Olá, convidado</b>
-            <p>Entre ou cadastre-se</p>
-          </div>
-        </div>
-        <div class="menu-btns" style="display: flex; gap: 8px">
-          <a class="btn-entrar" href="#">Entrar</a>
-          <a class="btn-criar" href="#">Criar conta</a>
-        </div>
-      </div>
-      <nav class="menu-items">
-        <a class="menu-link" href="index.html">Início</a>
-        <a class="menu-link" href="index.html#ofertas">Ofertas</a>
-        <a class="menu-link" href="index.html#categorias">Categorias</a>
-      </nav>
-    </div>
-    <div id="menuOverlay" aria-hidden="true"></div>
-
-    <!-- ===== CONTEÚDO PRINCIPAL (PAGAMENTO) ===== -->
+    <!-- ===== CONTEÚDO PRINCIPAL ===== -->
     <div class="container">
       <div class="payment-wrap">
-        <!-- COLUNA ESQUERDA: opções -->
         <div class="card">
           <h2>Como você prefere pagar?</h2>
 
-          <div
-            class="options"
-            role="radiogroup"
-            aria-label="Opções de pagamento"
-          >
-            <div
-              class="payment-option"
-              role="radio"
-              data-method="pix"
-              tabindex="0"
-              aria-checked="false"
-            >
+          <div class="options">
+            <div class="payment-option" data-method="pix">
               <div class="payment-info">
                 <div class="payment-title">PIX</div>
                 <div class="payment-sub">Aprovação imediata</div>
               </div>
-              <div class="payment-price"></div>
             </div>
 
-            <div
-              class="payment-option"
-              role="radio"
-              data-method="card"
-              tabindex="0"
-              aria-checked="false"
-            >
+            <div class="payment-option" data-method="card">
               <div class="payment-info">
                 <div class="payment-title">Cartão de crédito</div>
                 <div class="payment-sub">Parcelamento e outras opções</div>
               </div>
-              <div class="payment-price">Parcelar</div>
             </div>
           </div>
 
-          <div id="pix-area" class="pay-area" aria-hidden="true">
+          <div id="pix-area" class="pay-area">
             <p><strong>PIX instantâneo</strong></p>
-            <p>
-              Ao escolher PIX você será levado para a tela de pagamento via PIX.
-            </p>
+            <p>Você será levado para a tela de pagamento via PIX.</p>
           </div>
 
-          <form
-            id="card-area"
-            class="pay-area"
-            aria-hidden="true"
-            onsubmit="return false;"
-          >
+          <form id="card-area" class="pay-area" onsubmit="return false;">
             <div class="field">
-              <label class="field"
-                ><span>Nome (como no cartão)</span>
-                <input
-                  type="text"
-                  id="card-name"
-                  placeholder="Seu nome completo"
-                  autocomplete="cc-name"
-                />
-              </label>
+              <label><span>Nome (como no cartão)</span></label>
+              <input
+                type="text"
+                id="card-name"
+                placeholder="Seu nome completo"
+              />
             </div>
             <div class="field">
-              <label class="field"
-                ><span>Número do cartão</span>
-                <input
-                  type="text"
-                  id="card-number"
-                  inputmode="numeric"
-                  placeholder="1234 5678 9012 3456"
-                  maxlength="19"
-                  autocomplete="cc-number"
-                />
-              </label>
+              <label><span>Número do cartão</span></label>
+              <input
+                type="text"
+                id="card-number"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+              />
             </div>
             <div class="row">
               <div class="field small">
-                <label
-                  ><span>Validade (MM/AA)</span>
-                  <input
-                    type="text"
-                    id="card-exp"
-                    placeholder="MM/AA"
-                    maxlength="5"
-                    autocomplete="cc-exp"
-                  />
-                </label>
+                <label><span>Validade</span></label>
+                <input
+                  type="text"
+                  id="card-exp"
+                  placeholder="MM/AA"
+                  maxlength="5"
+                />
               </div>
               <div class="field small">
-                <label
-                  ><span>CVV</span>
-                  <input
-                    type="text"
-                    id="card-cvv"
-                    inputmode="numeric"
-                    maxlength="4"
-                    placeholder="123"
-                    autocomplete="cc-csc"
-                  />
-                </label>
+                <label><span>CVV</span></label>
+                <input
+                  type="text"
+                  id="card-cvv"
+                  maxlength="4"
+                  placeholder="123"
+                />
               </div>
             </div>
+            <a href="chamado pix.html" class="card-link"
+              >Pagar com PIX em vez disso?</a
+            >
           </form>
-
-          <div id="boleto-area" class="pay-area" aria-hidden="true">
-            <p><strong>Boleto bancário</strong></p>
-            <p>Ao finalizar será gerado um boleto com validade de 3 dias.</p>
-          </div>
         </div>
 
-        <!-- COLUNA DIREITA: resumo -->
         <aside class="summary">
-          <div>
-            <div class="order-line">
-              <div>Produto</div>
-              <div><strong>PS5 Playstation 5</strong></div>
-            </div>
-            <div class="order-line">
-              <div>Preço</div>
-              <div>R$ 1.500</div>
-            </div>
-            <div class="order-line">
-              <div>Frete</div>
-              <div id="order-frete">—</div>
-            </div>
+          <div class="order-line">
+            <div>Produto</div>
+            <div><strong>PS5 Playstation 5</strong></div>
           </div>
-
+          <div class="order-line">
+            <div>Preço</div>
+            <div>R$ 1.500,00</div>
+          </div>
+          <div class="order-line">
+            <div>Frete</div>
+            <div id="order-frete">Grátis</div>
+          </div>
           <div style="border-top: 1px solid #f0f0f0; padding-top: 10px">
             <div class="order-line">
               <div>Total</div>
-              <div class="total" id="order-total">R$ 1.500</div>
+              <div class="total" id="order-total">R$ 1.500,00</div>
             </div>
           </div>
-
           <button id="finalize-btn" class="btn-continue" disabled>
             Finalizar compra
           </button>
-          <small style="display: block; margin-top: 8px; color: #666"
-            >Após finalizar você será redirecionado (simulação).</small
-          >
         </aside>
       </div>
     </div>
 
     <script>
-      // ===== MENU LATERAL =====
+      // MENU
       (function () {
         const openBtn = document.getElementById("openMenu");
-        const closeBtn = document.getElementById("closeMenu");
         const side = document.getElementById("sideMenu");
         const overlay = document.getElementById("menuOverlay");
-
-        function openMenu() {
-          side.classList.add("open");
-          overlay.classList.add("visible");
-          side.setAttribute("aria-hidden", "false");
-          overlay.setAttribute("aria-hidden", "false");
-        }
-        function closeMenu() {
-          side.classList.remove("open");
-          overlay.classList.remove("visible");
-          side.setAttribute("aria-hidden", "true");
-          overlay.setAttribute("aria-hidden", "true");
-        }
-
-        openBtn && openBtn.addEventListener("click", openMenu);
-        closeBtn && closeBtn.addEventListener("click", closeMenu);
-        overlay && overlay.addEventListener("click", closeMenu);
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") closeMenu();
-        });
+        if (openBtn)
+          openBtn.onclick = () => {
+            side.classList.add("open");
+            overlay.classList.add("visible");
+          };
       })();
 
-      // ===== PAGAMENTO (mantido e integrado) =====
+      // LOGICA PAGAMENTO
       (function () {
-        function lerEndereco() {
-          const params = new URLSearchParams(window.location.search);
-          const rua = params.get("endereco_rua") || "";
-          const numero = params.get("endereco_numero") || "";
-          const cep = params.get("endereco_cep") || "";
-          if (rua) return { rua, numero, cep };
-          try {
-            const raw = localStorage.getItem("meuEndereco");
-            if (raw) {
-              const obj = JSON.parse(raw);
-              return {
-                rua: obj.rua || "",
-                numero: obj.numero || "",
-                cep: obj.cep || "",
-              };
-            }
-          } catch (e) {
-            console.warn("Erro lendo localStorage:", e);
-          }
-          return { rua: "São Paulo", numero: "", cep: "04305000" };
-        }
-
-        const address = lerEndereco();
-        const display = document.getElementById("display-endereco");
-        display.innerText =
-          address.rua +
-          (address.numero ? ", " + address.numero : "") +
-          (address.cep ? " - CEP: " + address.cep : "");
-
-        const options = Array.from(
-          document.querySelectorAll(".payment-option"),
-        );
+        const options = document.querySelectorAll(".payment-option");
         const pixArea = document.getElementById("pix-area");
         const cardArea = document.getElementById("card-area");
-        const boletoArea = document.getElementById("boleto-area");
         const finalizeBtn = document.getElementById("finalize-btn");
-        const orderFrete = document.getElementById("order-frete");
-        const orderTotal = document.getElementById("order-total");
 
-        const produtoValor = 1349.0;
+        options.forEach((opt) => {
+          opt.onclick = () => {
+            options.forEach((o) => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            const method = opt.dataset.method;
 
-        function atualizarResumo(frete) {
-          orderFrete.innerText =
-            frete === 0 ? "Grátis" : "R$ " + frete.toFixed(2).replace(".", ",");
-          const total = produtoValor + frete;
-          orderTotal.innerText = "R$ " + total.toFixed(2).replace(".", ",");
-        }
+            pixArea.style.display = "none";
+            cardArea.style.display = "none";
 
-        function resetSelection() {
-          options.forEach((o) => {
-            o.classList.remove("selected");
-            o.setAttribute("aria-checked", "false");
-          });
-          [pixArea, cardArea, boletoArea].forEach((a) => {
-            if (a) {
-              a.classList.remove("active");
-              a.setAttribute("aria-hidden", "true");
+            if (method === "pix") {
+              window.location.href = "pix.html?total=1500.00";
+            } else if (method === "card") {
+              cardArea.style.display = "block";
+              finalizeBtn.disabled = false;
             }
-          });
-          finalizeBtn.disabled = true;
-          finalizeBtn.removeAttribute("data-method");
-        }
-
-        function selectOption(option) {
-          resetSelection();
-          option.classList.add("selected");
-          option.setAttribute("aria-checked", "true");
-          const method = option.dataset.method;
-
-          if (method === "pix") {
-            const params = new URLSearchParams(window.location.search);
-            const freteValue = 0.0;
-            params.set("metodo", "pix");
-            params.set("frete", freteValue.toFixed(2));
-            const total = produtoValor + freteValue;
-            params.set("total", total.toFixed(2));
-            // redireciona direto para pix.html com params
-            window.location.href = "pix.html?" + params.toString();
-            return;
-          }
-
-          if (method === "card") {
-            cardArea.classList.add("active");
-            cardArea.setAttribute("aria-hidden", "false");
-            atualizarResumo(9.9);
-          }
-
-          finalizeBtn.disabled = false;
-          finalizeBtn.dataset.method = method;
-        }
-
-        options.forEach((option) => {
-          option.addEventListener("click", () => selectOption(option));
-          option.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              selectOption(option);
-            }
-          });
-        });
-
-        finalizeBtn.addEventListener("click", () => {
-          const method = finalizeBtn.dataset.method;
-          if (!method) return;
-
-          if (method === "card") {
-            const name = document.getElementById("card-name").value.trim();
-            const number = document
-              .getElementById("card-number")
-              .value.replace(/\s/g, "")
-              .trim();
-            const exp = document.getElementById("card-exp").value.trim();
-            const cvv = document.getElementById("card-cvv").value.trim();
-            if (!name || number.length < 12 || !exp || cvv.length < 3) {
-              alert("Preencha todos os dados do cartão corretamente.");
-              return;
-            }
-          }
-
-          const freteText = orderFrete.innerText;
-          const totalText = orderTotal.innerText;
-          const pedido = {
-            produto: "PS3 Playstation 3",
-            preco: produtoValor,
-            frete: freteText,
-            total: totalText,
-            metodo: method,
-            endereco: address,
           };
-          localStorage.setItem("ultimoPedido", JSON.stringify(pedido));
-          window.location.href = "confirmacao.html";
         });
 
-        // máscaras simples
-        const cardNumber = document.getElementById("card-number");
-        if (cardNumber) {
-          cardNumber.addEventListener("input", (e) => {
-            let v = e.target.value.replace(/\D/g, "").slice(0, 16);
-            v = v.match(/.{1,4}/g)?.join(" ") || v;
-            e.target.value = v;
-          });
-        }
-        const cardExp = document.getElementById("card-exp");
-        if (cardExp) {
-          cardExp.addEventListener("input", (e) => {
-            let v = e.target.value.replace(/\D/g, "").slice(0, 4);
-            if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
-            e.target.value = v;
-          });
-        }
+        finalizeBtn.onclick = () => {
+          window.location.href = "confirmacao.html";
+        };
 
-        // pre-selecao por query ?metodo=pix
-        const params = new URLSearchParams(window.location.search);
-        const prefer = params.get("metodo");
-        if (prefer) {
-          const opt = options.find((o) => o.dataset.method === prefer);
-          if (opt) selectOption(opt);
-        }
+        // Mascaras
+        document.getElementById("card-number").oninput = (e) => {
+          e.target.value = e.target.value
+            .replace(/\D/g, "")
+            .replace(/(.{4})/g, "$1 ")
+            .trim();
+        };
+        document.getElementById("card-exp").oninput = (e) => {
+          let v = e.target.value.replace(/\D/g, "");
+          if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
+          e.target.value = v;
+        };
       })();
     </script>
   </body>
