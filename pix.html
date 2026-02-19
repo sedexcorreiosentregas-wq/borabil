@@ -168,7 +168,7 @@
         <div class="content">
           <!-- Informações de Valor e Tempo -->
           <div class="value-info">
-            <h2>Valor total: R$ <span id="body-total"></span></h2>
+            <h2><span id="body-total"></span></h2>
             <p>
               Fique ciente: seu código é válido por
               <span class="timer-text" id="timer">09:59</span>
@@ -237,8 +237,6 @@
 
       (function init() {
         const data = lerParams();
-        document.getElementById("header-total").innerText = data.total;
-        document.getElementById("body-total").innerText = data.total;
 
         const pixCode = gerarPixCode(data.total);
         document.getElementById("pix-code").innerText = pixCode;
