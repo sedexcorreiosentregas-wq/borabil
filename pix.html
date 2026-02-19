@@ -161,14 +161,14 @@
       <div class="card">
         <!-- Cabeçalho Verde -->
         <div class="header-green">
-          <h1>Pague R$ <span id="header-total">1.349,90</span> via Pix</h1>
+          <h1>Pague R$ <span id="header-total"></span> via Pix</h1>
           <p>para garantir sua compra</p>
         </div>
 
         <div class="content">
           <!-- Informações de Valor e Tempo -->
           <div class="value-info">
-            <h2>Valor total: R$ <span id="body-total">1.349</span></h2>
+            <h2>Valor total: R$ <span id="body-total"></span></h2>
             <p>
               Fique ciente: seu código é válido por
               <span class="timer-text" id="timer">09:59</span>
@@ -226,7 +226,7 @@
       function lerParams() {
         const p = new URLSearchParams(window.location.search);
         return {
-          total: p.get("total") || "1.1500,00",
+          total: p.get("total") || "1500,00",
         };
       }
 
@@ -238,8 +238,7 @@
       (function init() {
         const data = lerParams();
         document.getElementById("header-total").innerText = data.total;
-        document.getElementById("body-total").innerText =
-          data.total.split(",")[0]; // Pega só a parte inteira para o texto de baixo se quiser igual à foto
+        document.getElementById("body-total").innerText = data.total;
 
         const pixCode = gerarPixCode(data.total);
         document.getElementById("pix-code").innerText = pixCode;
